@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StatusBar } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AppProvider, useApp } from './src/context/AppContext';
+import AppNavigator from './src/navigation/AppNavigator';
+import LoginScreen from './src/screens/LoginScreen';
+import RegisterScreen from './src/screens/RegisterScreen';
 
-export default function App() {
+function AppContent() {
+  const { state } = useApp();
+  const [currentView, setCurrentView] = useState('login'); // 'login' or 'register'
+
+  // Eğer state içinde currentUser varsa giriş yapılmış demektir
+  const isAuthenticated = !!state.currentUser;
+
+  if (isAuthenticated) {
+    return <AppNavigator />;
+  }
+
+  if (currentView === 'login') {
+    return (
+      <LoginScreen 
+        onRegister={() => setCurrentView('register')}
+      />
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <RegisterScreen 
+      onBack={() => setCurrentView('login')}
+      onRegister={() => setCurrentView('login')}
+    />
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <AppProvider>
+        <StatusBar barStyle="light-content" backgroundColor="#0f172a" translucent={true} />
+        <AppContent />
+      </AppProvider>
+    </SafeAreaProvider>
+  );
+}
