@@ -34,6 +34,12 @@
     },
     "plugins": [
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "6dadf3dc-1a79-4c8b-9f18-0f5e8c0333e4"
+      }
+    },
+    "owner": "ozgurciytak19991"
   }
 }
